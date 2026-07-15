@@ -1,9 +1,10 @@
-// middleware.ts — Proteksi semua route /admin/* kecuali /admin/login
+// proxy.ts — Proteksi semua route /admin/* kecuali /admin/login
+// Next.js 16: export function bernama "proxy" (pengganti "middleware")
 // Menggunakan @supabase/ssr untuk refresh session via cookie
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -56,11 +57,10 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Jalankan middleware di semua path kecuali:
+     * Jalankan proxy di semua path kecuali:
      * - _next/static (file statis)
      * - _next/image (image optimization)
      * - favicon.ico, file gambar
-     * - api routes internal
      */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],

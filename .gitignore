@@ -30,8 +30,22 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# =============================================================
+# ENV FILES — JANGAN PERNAH commit file berisi secret ke Git!
+# =============================================================
+# Blokir semua .env variants
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env*.local
+
+# .env.example BOLEH di-commit (berisi nama variable saja, tanpa value asli)
+# !.env.example sudah di-include karena tidak di-match pattern di atas
 
 # vercel
 .vercel
