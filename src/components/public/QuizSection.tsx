@@ -42,7 +42,7 @@ export default function QuizSection({ questions }: QuizSectionProps) {
         timerProgressBar: true,
         showClass: { popup: 'animate__animated animate__fadeInDown' },
         customClass: { popup: 'rounded-2xl font-quicksand' },
-      }).then(() => nextQuestion());
+      }).then(() => nextQuestion(isCorrect));
     } else {
       Swal.fire({
         title: '💭 Hmm...',
@@ -55,14 +55,19 @@ export default function QuizSection({ questions }: QuizSectionProps) {
         timer: 2500,
         timerProgressBar: true,
         customClass: { popup: 'rounded-2xl font-quicksand' },
-      }).then(() => nextQuestion());
+      }).then(() => nextQuestion(isCorrect));
     }
   }
 
-  function nextQuestion() {
+  function nextQuestion(lastAnswerCorrect: boolean) {
     if (currentIdx + 1 >= total) {
+      // Hitung finalScore dari score (state) + kontribusi jawaban terakhir.
+      // Tidak bisa pakai state `score` langsung karena setScore bersifat async,
+      // sehingga score di closure ini masih nilai sebelum +1.
+      // Gunakan lastAnswerCorrect yang di-pass langsung sebagai single source of truth.
+      const finalScore = score + (lastAnswerCorrect ? 1 : 0);
       setFinished(true);
-      showFinalResult(score + (answered && questions[currentIdx].options?.find(o => o.id === answered)?.is_correct ? 1 : 0));
+      showFinalResult(finalScore);
     } else {
       setCurrentIdx((i) => i + 1);
       setAnswered(null);
